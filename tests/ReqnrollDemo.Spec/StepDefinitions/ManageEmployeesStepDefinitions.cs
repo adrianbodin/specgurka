@@ -11,8 +11,8 @@ public class ManageEmployeesStepDefinitions
         _department = null;
     }
 
-    [Given(@"I am logged in as an HR manager")]
-    public void GivenIAmLoggedInAsAnHrManager()
+    [Given(@"att jag är inloggad som HR-chef")]
+    public void GivenAttJagArInloggadSomHrChef()
     {
         Console.WriteLine("Logged in as HR manager!");
     }
@@ -20,53 +20,59 @@ public class ManageEmployeesStepDefinitions
     [Given(@"I am on the ""(.*)"" page")]
     public void GivenIAmOnThePage(string page)
     {
+        Console.WriteLine($"I am on the page {page}");
+    }
+
+    [Given(@"att jag är på sidan ""(.*)""")]
+    public void GivenAttJagArPaSidan(string page)
+    {
         Console.WriteLine($"Navigated to {page} page!");
     }
 
-    [Given(@"the department ""(.*)"" exists with the following employees:")]
-    public void GivenTheDepartmentExistsWithTheFollowingEmployees(string departmentName, Table table)
+    [Given(@"att avdelningen ""(.*)"" finns med följande anställda:")]
+    public void GivenAttAvdelningenFinnsMedFoljandeAnstallda(string departmentName, Table table)
     {
         _department = new Department(departmentName);
 
         foreach (var row in table.Rows)
         {
-            var employee = new Employee(row["Name"], Enum.Parse<Role>(row["Role"]));
+            var employee = new Employee(row["Namn"], Enum.Parse<Role>(row["Roll"]));
             _department.AddEmployee(employee);
         }
     }
 
-    [When(@"I add an employee ""(.*)"" with the role ""(.*)"" to the ""(.*)"" department")]
-    public void WhenIAddAnEmployeeWithTheRoleToTheDepartment(string employeeName, string employeeRole, string departmentName)
+    [When(@"jag lägger till en anställd ""(.*)"" med rollen ""(.*)"" till avdelningen ""(.*)""")]
+    public void WhenJagLaggerTillEnAnstalldMedRollenTillAvdelningen(string employeeName, string employeeRole, string departmentName)
     {
         var employee = new Employee(employeeName, Enum.Parse<Role>(employeeRole));
         _department?.AddEmployee(employee);
     }
 
-    [Then(@"""(.*)"" should be added to the list of employees in the ""(.*)"" department")]
-    public void ThenShouldBeAddedToTheListOfEmployeesInTheDepartment(string employeeName, string departmentName)
+    [Then(@"ska ""(.*)"" läggas till i listan över anställda i avdelningen ""(.*)""")]
+    public void ThenSkaLaggasTillIListanOverAnstalldaIAvdelningen(string employeeName, string departmentName)
     {
         var employee = _department?.Employees.FirstOrDefault(e => e.Name == employeeName);
 
         Assert.NotNull(employee);
     }
 
-    [Given(@"an employee ""(.*)"" exists in the ""(.*)"" department")]
-    public void GivenAnEmployeeExistsInTheDepartment(string employeeName, string departmentName)
+    [Given(@"att en anställd ""(.*)"" finns i avdelningen ""(.*)""")]
+    public void GivenAttEnAnstalldFinnsIAvdelningen(string employeeName, string departmentName)
     {
         _department = new Department(departmentName);
         var employee = new Employee(employeeName, Role.Engineer);
         _department.AddEmployee(employee);
     }
 
-    [When(@"I remove ""(.*)"" from the ""(.*)"" department")]
-    public void WhenIRemoveFromTheDepartment(string employeeName, string departmentName)
+    [When(@"jag tar bort ""(.*)"" från avdelningen ""(.*)""")]
+    public void WhenJagTarBortFranAvdelningen(string employeeName, string departmentName)
     {
         var employee = _department?.Employees.FirstOrDefault(e => e.Name == employeeName);
         _department?.RemoveEmployee(employee.Id);
     }
 
-    [Then(@"""(.*)"" should no longer appear in the list of employees in the ""(.*)"" department")]
-    public void ThenShouldNoLongerAppearInTheListOfEmployeesInTheDepartment(string employeeName, string departmentName)
+    [Then(@"ska ""(.*)"" inte längre visas i listan över anställda i avdelningen ""(.*)""")]
+    public void ThenSkaInteLangreVisasIListanOverAnstalldaIAvdelningen(string employeeName, string departmentName)
     {
         var employee = _department?.Employees.FirstOrDefault(e => e.Name == employeeName);
 
